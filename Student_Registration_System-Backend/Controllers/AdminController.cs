@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Registration_System_Backend.Context;
+using Student_Registration_System_Backend.Helpers;
 using Student_Registration_System_Backend.Models;
 
 namespace Student_Registration_System_Backend.Controllers
@@ -23,11 +24,15 @@ namespace Student_Registration_System_Backend.Controllers
                 return BadRequest();
 
             var admin = await _authContext.Admins
-                .FirstOrDefaultAsync(x => x.UserName == adminObj.UserName && x.Password == adminObj.Password);
+                .FirstOrDefaultAsync(x => x.UserName == adminObj.UserName);
 
             if (admin == null)
             {
                 return NotFound(new { Message = "User Not Found!" });
+            }
+            if (!PasswordHasher.VerifyPassword(adminObj.Password, admin.Password))
+            {
+                return BadRequest(new { Message = "Password in incorrect" });
             }
 
             return Ok(new
@@ -45,6 +50,9 @@ namespace Student_Registration_System_Backend.Controllers
             {
                 return BadRequest();
             }
+            adminObj.Password = PasswordHasher.HashPassword(adminObj.Password);
+            adminObj.Role = "Admin";
+            adminObj.Token = "";
             await _authContext.Admins.AddAsync(adminObj); //help to send user to db
             await _authContext.SaveChangesAsync();
 
