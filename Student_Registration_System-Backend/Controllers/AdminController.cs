@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Student_Registration_System_Backend.Context;
 using Student_Registration_System_Backend.Helpers;
 using Student_Registration_System_Backend.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Student_Registration_System_Backend.Controllers
 {
@@ -34,11 +38,13 @@ namespace Student_Registration_System_Backend.Controllers
             {
                 return BadRequest(new { Message = "Password in incorrect" });
             }
+            admin.Token = CreateJwt(admin);
 
             return Ok(new
             {
+                Token = admin.Token,
                 Message = "Login Successs!"
-            });
+            }) ;
         }
 
 
@@ -57,6 +63,25 @@ namespace Student_Registration_System_Backend.Controllers
             await _authContext.SaveChangesAsync();
 
             return Ok(new { Message = "Admin Registered!" });
+        }
+
+        private string CreateJwt(Admin admin) 
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes("this is my custom Secret key for authentication");
+            var identity = new ClaimsIdentity(new Claim[]
+            {
+                new Claim(ClaimTypes.Role,admin.Role)
+            });
+            var credentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = identity,
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = credentials
+            };
+            var token = jwtTokenHandler.CreateToken(tokenDescriptor);
+            return jwtTokenHandler.WriteToken(token);
         }
 
     }
