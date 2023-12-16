@@ -84,5 +84,11 @@ namespace Student_Registration_System_Backend.Controllers
             return jwtTokenHandler.WriteToken(token);
         }
 
+        [HttpGet]
+        public async Task<ActionResult<Admin>> GetAllAdmins()
+        {
+            return Ok(await _authContext.Admins.ToListAsync());
+        }
+
     }
 }
