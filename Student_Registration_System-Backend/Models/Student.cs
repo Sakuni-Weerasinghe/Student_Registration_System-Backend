@@ -8,7 +8,7 @@ namespace Student_Registration_System_Backend.Models
         public int StudentId { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public DateOnly Birthday { get; set; }
+        public DateTime Birthday { get; set; }
         public string Gender { get; set; }
         public string Phones { get; set; }
         public string Email { get; set; }
