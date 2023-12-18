@@ -33,5 +33,17 @@ namespace Student_Registration_System_Backend.Controllers
             return Ok(student);
         }
 
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetStudent([FromRoute] int id)
+        {
+            var student = await _authContext.Students.FirstOrDefaultAsync(x => x.StudentId == id);
+            if(student == null)
+            {
+                return NotFound();
+            }
+            return Ok(student);
+        }
+
     }
 }
