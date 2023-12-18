@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Student_Registration_System_Backend.Context;
 using Student_Registration_System_Backend.Models;
 
@@ -22,6 +23,14 @@ namespace Student_Registration_System_Backend.Controllers
             await _authContext.SaveChangesAsync();
 
             return Ok(registerstudentRequest);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllStudents()
+        {
+            var student = await _authContext.Students.ToListAsync();
+
+            return Ok(student);
         }
 
     }
