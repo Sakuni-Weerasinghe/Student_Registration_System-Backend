@@ -14,6 +14,7 @@ namespace Student_Registration_System_Backend.Context
         public DbSet<Student> Students { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseSchedule> CourseSchedules { get; set; }
+        public DbSet<Student_Courses> Student_Courses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -21,6 +22,7 @@ namespace Student_Registration_System_Backend.Context
             modelBuilder.Entity<Student>().ToTable("students");
             modelBuilder.Entity<Course>().ToTable("courses");
             modelBuilder.Entity<CourseSchedule>().ToTable("course_schedule");
+            modelBuilder.Entity<Student_Courses>().ToTable("student_courses");
 
 
         }
