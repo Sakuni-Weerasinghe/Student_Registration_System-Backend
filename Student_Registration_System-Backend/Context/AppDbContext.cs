@@ -38,6 +38,9 @@ namespace Student_Registration_System_Backend.Context
                 .WithMany(c => c.StudentCourses)
                 .HasForeignKey(sc => sc.CourseId);
 
+
+
+
             modelBuilder.Entity<CourseSchedule>()
                 .HasOne(sc => sc.Courses)
                 .WithMany(c => c.CourseSchedules)

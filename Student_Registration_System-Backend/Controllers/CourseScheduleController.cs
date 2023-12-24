@@ -64,5 +64,21 @@ namespace Student_Registration_System_Backend.Controllers
             return Ok(new { Message = "Course schedule added successfully" });
 
         }
+
+
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetCourseSchedule([FromRoute] int id)
+        {
+            var courseSchedule = await _authContext.CourseSchedules
+                .Where(x => x.CourseId == id)
+                .ToListAsync();
+
+            if (courseSchedule == null)
+            {
+                return NotFound();
+            }
+            return Ok(courseSchedule);
+        }
     }
 }

@@ -31,9 +31,10 @@ namespace Student_Registration_System_Backend.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllCourses()
         {
-            var course = await _authContext.Courses.ToListAsync();
+            var courseList = await _authContext.Courses
+                .Include(x => x.CourseSchedules).ToListAsync();
 
-            return Ok(course);
+            return Ok(courseList);
         }
     }
 }
