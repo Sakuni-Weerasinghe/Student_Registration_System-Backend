@@ -32,14 +32,14 @@ namespace Student_Registration_System_Backend.Controllers
 
             if (admin == null)
             {
-                return NotFound(new { Message = "User Not Found!" });
+                return NotFound(new { Message = "User Name is incorrect!" });
             }
             if (!PasswordHasher.VerifyPassword(adminObj.Password, admin.Password))
             {
-                return BadRequest(new { Message = "Password in incorrect" });
+                return BadRequest(new { Message = "Password in incorrect!" });
             }
-            admin.Token = CreateJwt(admin);
 
+            admin.Token = CreateJwt(admin);
             return Ok(new
             {
                 Token = admin.Token,
@@ -59,6 +59,7 @@ namespace Student_Registration_System_Backend.Controllers
             adminObj.Password = PasswordHasher.HashPassword(adminObj.Password);
             adminObj.Role = "Admin";
             adminObj.Token = "";
+            HelpingMethods.TrimStringProperties(adminObj);
             await _authContext.Admins.AddAsync(adminObj); //help to send user to db
             await _authContext.SaveChangesAsync();
 

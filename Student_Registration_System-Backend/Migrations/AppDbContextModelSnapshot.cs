@@ -67,11 +67,11 @@ namespace Student_Registration_System_Backend.Migrations
                     b.Property<int>("Credits")
                         .HasColumnType("int");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Lecturer")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("RegisterDate")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("CourseId");
 
@@ -100,7 +100,7 @@ namespace Student_Registration_System_Backend.Migrations
 
                     b.HasKey("ScheduleId");
 
-                    b.ToTable("course_schedule", (string)null);
+                    b.ToTable("CourseSchedules");
                 });
 
             modelBuilder.Entity("Student_Registration_System_Backend.Models.Student", b =>
@@ -120,8 +120,8 @@ namespace Student_Registration_System_Backend.Migrations
                     b.Property<string>("AddressLine3")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Birthday")
-                        .HasColumnType("datetime2");
+                    b.Property<DateOnly>("Birthday")
+                        .HasColumnType("date");
 
                     b.Property<string>("Email")
                         .HasColumnType("nvarchar(max)");
@@ -135,7 +135,10 @@ namespace Student_Registration_System_Backend.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phones")
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("StudentRegistrationNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("StudentId");
@@ -143,23 +146,51 @@ namespace Student_Registration_System_Backend.Migrations
                     b.ToTable("students", (string)null);
                 });
 
-            modelBuilder.Entity("Student_Registration_System_Backend.Models.Student_Courses", b =>
+            modelBuilder.Entity("Student_Registration_System_Backend.Models.StudentCourse", b =>
                 {
-                    b.Property<int>("StudentCourseId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("StudentId")
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudentCourseId"));
 
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StudentId")
-                        .HasColumnType("int");
+                    b.Property<DateTime>("EnrollmentDate")
+                        .HasColumnType("datetime2");
 
-                    b.HasKey("StudentCourseId");
+                    b.HasKey("StudentId", "CourseId");
 
-                    b.ToTable("student_courses", (string)null);
+                    b.HasIndex("CourseId");
+
+                    b.ToTable("StudentCourses");
+                });
+
+            modelBuilder.Entity("Student_Registration_System_Backend.Models.StudentCourse", b =>
+                {
+                    b.HasOne("Student_Registration_System_Backend.Models.Course", "Courses")
+                        .WithMany("StudentCourses")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Student_Registration_System_Backend.Models.Student", "Student")
+                        .WithMany("StudentCourses")
+                        .HasForeignKey("StudentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Courses");
+
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("Student_Registration_System_Backend.Models.Course", b =>
+                {
+                    b.Navigation("StudentCourses");
+                });
+
+            modelBuilder.Entity("Student_Registration_System_Backend.Models.Student", b =>
+                {
+                    b.Navigation("StudentCourses");
                 });
 #pragma warning restore 612, 618
         }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Registration_System_Backend.Context;
+using Student_Registration_System_Backend.Helpers;
 using Student_Registration_System_Backend.Models;
 
 namespace Student_Registration_System_Backend.Controllers
@@ -19,6 +20,13 @@ namespace Student_Registration_System_Backend.Controllers
         [HttpPost("register-student")]
         public async Task<IActionResult> RegisterStudent([FromBody] Student registerstudentRequest)
         {
+            if (registerstudentRequest == null)
+            {
+                return BadRequest();
+            }
+            
+            HelpingMethods.TrimStringProperties(registerstudentRequest);
+            registerstudentRequest.Email = registerstudentRequest.StudentRegistrationNumber + "@gmail.com";
             await _authContext.Students.AddAsync(registerstudentRequest);
             await _authContext.SaveChangesAsync();
 

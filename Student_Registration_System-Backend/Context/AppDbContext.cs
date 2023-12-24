@@ -14,15 +14,28 @@ namespace Student_Registration_System_Backend.Context
         public DbSet<Student> Students { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseSchedule> CourseSchedules { get; set; }
-        public DbSet<Student_Courses> Student_Courses { get; set; }
+        public DbSet<StudentCourse> StudentCourses { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Admin>().ToTable("admins");
             modelBuilder.Entity<Student>().ToTable("students");
             modelBuilder.Entity<Course>().ToTable("courses");
-            modelBuilder.Entity<CourseSchedule>().ToTable("course_schedule");
-            modelBuilder.Entity<Student_Courses>().ToTable("student_courses");
+
+            // Configure many-to-many relationship
+            modelBuilder.Entity<StudentCourse>()
+                .HasKey(sc => new { sc.StudentId, sc.CourseId });
+
+            modelBuilder.Entity<StudentCourse>()
+                .HasOne(sc => sc.Student)
+                .WithMany(s => s.StudentCourses)
+                .HasForeignKey(sc => sc.StudentId);
+
+            modelBuilder.Entity<StudentCourse>()
+                .HasOne(sc => sc.Courses)
+                .WithMany(c => c.StudentCourses)
+                .HasForeignKey(sc => sc.CourseId);
 
 
         }

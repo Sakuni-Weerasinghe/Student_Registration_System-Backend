@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Student_Registration_System_Backend.Context;
+using Student_Registration_System_Backend.Helpers;
 using Student_Registration_System_Backend.Models;
 
 namespace Student_Registration_System_Backend.Controllers
@@ -16,16 +18,27 @@ namespace Student_Registration_System_Backend.Controllers
         }
 
         [HttpPost("add-student-courses")]
-        public async Task<IActionResult> AddStudentCourse([FromBody]  Student_Courses[] addStudentCourseRequest)
+        public async Task<IActionResult> AddStudentCourse([FromBody]  StudentCourse[] addStudentCourseRequest)
         {
             for (int i = 0; i < addStudentCourseRequest.Length ; i++)
             {
-                await _authContext.Student_Courses.AddAsync(addStudentCourseRequest[i]);
+                HelpingMethods.TrimStringProperties(addStudentCourseRequest);
+                await _authContext.StudentCourses.AddAsync(addStudentCourseRequest[i]);
                 await _authContext.SaveChangesAsync();
             }
-
-
             return Ok(addStudentCourseRequest);
+        }
+
+        [HttpGet]
+        [Route("Courses/{id:int}")]
+        public async Task<IActionResult> GetStudent([FromRoute] int id)
+        {
+            var studentCourses = await _authContext.StudentCourses.Where(x => x.StudentId == id).ToListAsync();
+            if (studentCourses == null)
+            {
+                return NotFound();
+            }
+            return Ok(studentCourses) ;
         }
     }
 }

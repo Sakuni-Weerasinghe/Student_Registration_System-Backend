@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Student_Registration_System_Backend.Context;
+using Student_Registration_System_Backend.Helpers;
 using Student_Registration_System_Backend.Models;
 
 namespace Student_Registration_System_Backend.Controllers
@@ -19,6 +20,8 @@ namespace Student_Registration_System_Backend.Controllers
         [HttpPost("add-course")]
         public async Task<IActionResult> AddCourse([FromBody] Course addCourseRequest)
         {
+            HelpingMethods.TrimStringProperties(addCourseRequest);
+            addCourseRequest.RegisterDate = DateTime.UtcNow.Date ;
             await _authContext.Courses.AddAsync(addCourseRequest);
             await _authContext.SaveChangesAsync();
 
