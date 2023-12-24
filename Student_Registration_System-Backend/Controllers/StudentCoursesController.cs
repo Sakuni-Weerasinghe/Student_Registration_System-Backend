@@ -33,8 +33,13 @@ namespace Student_Registration_System_Backend.Controllers
         [Route("Courses/{id:int}")]
         public async Task<IActionResult> GetStudent([FromRoute] int id)
         {
-            var studentCourses = await _authContext.StudentCourses.Where(x => x.StudentId == id).ToListAsync();
-            if (studentCourses == null)
+            var studentCourses = await _authContext.StudentCourses
+                .Where(x => x.StudentId == id)
+                .Include(x => x.Student)
+                .Include(x => x.Courses)
+                .ToListAsync();
+
+            if (!studentCourses.Any())
             {
                 return NotFound();
             }

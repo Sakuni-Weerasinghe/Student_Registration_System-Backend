@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Student_Registration_System_Backend.Models
 {
@@ -12,6 +13,7 @@ namespace Student_Registration_System_Backend.Models
         public DateTime RegisterDate { get; set; }
         public string Lecturer { get; set; }
 
+        [JsonIgnore]
         public ICollection<StudentCourse> StudentCourses { get; set; }
 
 

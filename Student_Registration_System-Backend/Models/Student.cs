@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Student_Registration_System_Backend.Models
 {
@@ -17,6 +18,7 @@ namespace Student_Registration_System_Backend.Models
         public string AddressLine2 { get; set;}
         public string AddressLine3 { get; set;}
 
+        [JsonIgnore]
         public ICollection<StudentCourse> StudentCourses { get; set; }
 
 

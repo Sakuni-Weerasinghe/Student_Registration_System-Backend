@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Student_Registration_System_Backend.Context;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,9 @@ builder.Services.AddAuthentication(x =>
         ClockSkew = TimeSpan.Zero
     };
 });
+
+builder.Services.AddControllers().AddJsonOptions(
+    x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 var app = builder.Build();
 
