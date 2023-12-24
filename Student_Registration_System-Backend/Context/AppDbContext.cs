@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Student_Registration_System_Backend.Models;
+using System.Reflection.Metadata;
 
 namespace Student_Registration_System_Backend.Context
 {
@@ -13,8 +14,8 @@ namespace Student_Registration_System_Backend.Context
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<Course> Courses { get; set; }
-        public DbSet<CourseSchedule> CourseSchedules { get; set; }
         public DbSet<StudentCourse> StudentCourses { get; set; }
+        public DbSet<CourseSchedule> CourseSchedules { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -36,6 +37,11 @@ namespace Student_Registration_System_Backend.Context
                 .HasOne(sc => sc.Courses)
                 .WithMany(c => c.StudentCourses)
                 .HasForeignKey(sc => sc.CourseId);
+
+            modelBuilder.Entity<CourseSchedule>()
+                .HasOne(sc => sc.Courses)
+                .WithMany(c => c.CourseSchedules)
+                .HasForeignKey(cs => cs.CourseId);
 
 
         }

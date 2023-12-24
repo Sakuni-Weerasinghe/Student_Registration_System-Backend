@@ -12,8 +12,8 @@ using Student_Registration_System_Backend.Context;
 namespace Student_Registration_System_Backend.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20231224091112_second-migration")]
-    partial class secondmigration
+    [Migration("20231224135031_first-migration")]
+    partial class firstmigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,14 +83,14 @@ namespace Student_Registration_System_Backend.Migrations
 
             modelBuilder.Entity("Student_Registration_System_Backend.Models.CourseSchedule", b =>
                 {
-                    b.Property<int>("ScheduleId")
+                    b.Property<int>("CourseScheduleId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ScheduleId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CourseScheduleId"));
 
-                    b.Property<string>("CourseCode")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Date")
                         .HasColumnType("nvarchar(max)");
@@ -101,7 +101,9 @@ namespace Student_Registration_System_Backend.Migrations
                     b.Property<string>("Venue")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ScheduleId");
+                    b.HasKey("CourseScheduleId");
+
+                    b.HasIndex("CourseId");
 
                     b.ToTable("CourseSchedules");
                 });
@@ -167,6 +169,17 @@ namespace Student_Registration_System_Backend.Migrations
                     b.ToTable("StudentCourses");
                 });
 
+            modelBuilder.Entity("Student_Registration_System_Backend.Models.CourseSchedule", b =>
+                {
+                    b.HasOne("Student_Registration_System_Backend.Models.Course", "Courses")
+                        .WithMany("CourseSchedules")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Courses");
+                });
+
             modelBuilder.Entity("Student_Registration_System_Backend.Models.StudentCourse", b =>
                 {
                     b.HasOne("Student_Registration_System_Backend.Models.Course", "Courses")
@@ -188,6 +201,8 @@ namespace Student_Registration_System_Backend.Migrations
 
             modelBuilder.Entity("Student_Registration_System_Backend.Models.Course", b =>
                 {
+                    b.Navigation("CourseSchedules");
+
                     b.Navigation("StudentCourses");
                 });
 

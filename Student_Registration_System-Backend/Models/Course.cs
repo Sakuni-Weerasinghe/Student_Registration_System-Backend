@@ -16,6 +16,8 @@ namespace Student_Registration_System_Backend.Models
         [JsonIgnore]
         public ICollection<StudentCourse> StudentCourses { get; set; }
 
+        public ICollection<CourseSchedule> CourseSchedules { get; set; }
+
 
 
 

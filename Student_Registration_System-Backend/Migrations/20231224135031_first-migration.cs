@@ -46,22 +46,6 @@ namespace Student_Registration_System_Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CourseSchedules",
-                columns: table => new
-                {
-                    ScheduleId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CourseCode = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Date = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Time = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Venue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CourseSchedules", x => x.ScheduleId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "students",
                 columns: table => new
                 {
@@ -81,6 +65,28 @@ namespace Student_Registration_System_Backend.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_students", x => x.StudentId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CourseSchedules",
+                columns: table => new
+                {
+                    CourseScheduleId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CourseId = table.Column<int>(type: "int", nullable: false),
+                    Date = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Time = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Venue = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CourseSchedules", x => x.CourseScheduleId);
+                    table.ForeignKey(
+                        name: "FK_CourseSchedules_courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "courses",
+                        principalColumn: "CourseId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,6 +113,11 @@ namespace Student_Registration_System_Backend.Migrations
                         principalColumn: "StudentId",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CourseSchedules_CourseId",
+                table: "CourseSchedules",
+                column: "CourseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_StudentCourses_CourseId",

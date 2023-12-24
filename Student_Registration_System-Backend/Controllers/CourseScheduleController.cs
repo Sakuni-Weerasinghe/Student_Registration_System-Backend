@@ -15,13 +15,13 @@ namespace Student_Registration_System_Backend.Controllers
             _authContext = appDbContext;
         }
 
-        [HttpPost("add-course-schedule")]
-        public async Task<IActionResult> AddCourseSchedule([FromBody] CourseSchedule addCourseScheduleRequest)
-        {
-            await _authContext.CourseSchedules.AddAsync(addCourseScheduleRequest);
-            await _authContext.SaveChangesAsync();
+       // [HttpPost("add-course-schedule")]
+      //  public async Task<IActionResult> AddCourseSchedule([FromBody] CourseSchedule addCourseScheduleRequest)
+       // {
+        //    await _authContext. .AddAsync(addCourseScheduleRequest);
+        //    await _authContext.SaveChangesAsync();
 
-            return Ok(addCourseScheduleRequest);
-        }
+        //    return Ok(addCourseScheduleRequest);
+      //  }
     }
 }
