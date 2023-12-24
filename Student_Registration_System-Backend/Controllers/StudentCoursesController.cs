@@ -39,7 +39,7 @@ namespace Student_Registration_System_Backend.Controllers
                 .Include(x => x.Courses)
                 .ToListAsync();
 
-            if (!studentCourses.Any())
+            if (studentCourses == null)
             {
                 return NotFound();
             }
