@@ -36,5 +36,6 @@ namespace Student_Registration_System_Backend.Controllers
 
             return Ok(courseList);
         }
+
     }
 }

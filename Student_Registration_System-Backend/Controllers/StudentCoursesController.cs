@@ -45,5 +45,21 @@ namespace Student_Registration_System_Backend.Controllers
             }
             return Ok(studentCourses) ;
         }
+
+        [HttpDelete]
+        [Route("{studentId:int}/{courseId:int}")]
+        public async Task<IActionResult> DeleteStudentCourse([FromRoute] int studentId,int courseId)
+        {
+            var course = await _authContext.StudentCourses.FindAsync(studentId, courseId);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            _authContext.StudentCourses.Remove(course);
+            await _authContext.SaveChangesAsync();
+            return Ok(new { Message = "Successfully Unenrolled"});
+
+        }
+
     }
 }
