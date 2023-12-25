@@ -42,5 +42,41 @@ namespace Student_Registration_System_Backend.Controllers
             return Ok(courseList);
         }
 
+        [HttpDelete]
+        [Route("delete/{courseId:int}")]
+        public async Task<IActionResult> DeleteCourse([FromRoute] int courseId)
+        {
+            var course = await _authContext.Courses
+                .Include(s => s.StudentCourses)  // Include related courses to delete them as well
+                .Include(s => s.CourseSchedules)
+                .FirstOrDefaultAsync(s => s.CourseId == courseId);
+
+            if (course == null)
+            {
+                return NotFound();
+            }
+
+            if (course.StudentCourses.Any())
+            {
+                // Remove related students
+                _authContext.StudentCourses.RemoveRange(course.StudentCourses);
+            }
+
+            if (course.CourseSchedules.Any())
+            {
+                // Remove related courses schedule
+                _authContext.CourseSchedules.RemoveRange(course.CourseSchedules);
+            }
+
+
+            // Remove the student
+            _authContext.Courses.Remove(course);
+
+            await _authContext.SaveChangesAsync();
+
+            return Ok(new { Message = "Successfully Deleted" });
+
+        }
+
     }
 }
