@@ -21,11 +21,16 @@ namespace Student_Registration_System_Backend.Controllers
         public async Task<IActionResult> AddCourse([FromBody] Course addCourseRequest)
         {
             HelpingMethods.TrimStringProperties(addCourseRequest);
+            if (_authContext.Courses.Any(s => s.CourseCode == addCourseRequest.CourseCode))
+            {
+                // Student with the same registration number already exists
+                return BadRequest(new { Message = "The course is already added!" });
+            }
             addCourseRequest.RegisterDate = DateTime.UtcNow.Date ;
             await _authContext.Courses.AddAsync(addCourseRequest);
             await _authContext.SaveChangesAsync();
 
-            return Ok(addCourseRequest);
+            return Ok(new {Message = "Course Registered" });
         }
 
         [HttpGet]

@@ -26,7 +26,7 @@ namespace Student_Registration_System_Backend.Controllers
                 await _authContext.StudentCourses.AddAsync(addStudentCourseRequest[i]);
                 await _authContext.SaveChangesAsync();
             }
-            return Ok(addStudentCourseRequest);
+            return Ok(new {Message = " Successfully Enrolled!"});
         }
 
         [HttpGet]

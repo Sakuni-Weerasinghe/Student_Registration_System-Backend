@@ -29,7 +29,7 @@ namespace Student_Registration_System_Backend.Controllers
             if (course == null)
             {
                 // Handle the case where the CourseCode is not found
-                return NotFound($"Course with code {addCourseScheduleRequest.CourseCode} not found");
+                return NotFound( new { Message = $"Course with code {addCourseScheduleRequest.CourseCode} not found" });
             }
 
             // Step 2: Check if the schedule already exists for any course
