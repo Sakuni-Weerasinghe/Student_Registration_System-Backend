@@ -60,6 +60,34 @@ namespace Student_Registration_System_Backend.Controllers
             return Ok(student);
         }
 
+        [HttpPut]
+        [Route("update/{studentId:int}")]
+        public async Task<IActionResult> UpdateStudent([FromRoute] int studentId, Student updateStudentRequest)
+        {
+            var student = await _authContext.Students.FindAsync(studentId);
+            if (student == null)
+            {
+                return NotFound(new {Message = "Not Found"});
+            }
+
+            student.StudentRegistrationNumber = updateStudentRequest.StudentRegistrationNumber;
+            student.FirstName = updateStudentRequest.FirstName;
+            student.LastName = updateStudentRequest.LastName;
+            student.Birthday = updateStudentRequest.Birthday;
+            student.Gender = updateStudentRequest.Gender;
+            student.Phone = updateStudentRequest.Phone;
+            student.Email = updateStudentRequest.Email;
+            student.AddressLine1 = updateStudentRequest.AddressLine1;
+            student.AddressLine2 = updateStudentRequest.AddressLine2;
+            student.AddressLine3 = updateStudentRequest.AddressLine3;
+
+            await _authContext.SaveChangesAsync();
+            return Ok(new
+            {
+                Message = "Sucessfully Updated!"
+            });
+        }
+
         [HttpDelete]
         [Route("delete/{studentId:int}")]
         public async Task<IActionResult> DeleteStudent([FromRoute] int studentId)

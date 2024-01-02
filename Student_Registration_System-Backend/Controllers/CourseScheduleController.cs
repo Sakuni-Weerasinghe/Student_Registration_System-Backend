@@ -13,6 +13,7 @@ namespace Student_Registration_System_Backend.Controllers
     public class CourseScheduleController : ControllerBase
     {
         private readonly AppDbContext _authContext;
+
         public CourseScheduleController(AppDbContext appDbContext)
         {
             _authContext = appDbContext;
@@ -79,6 +80,41 @@ namespace Student_Registration_System_Backend.Controllers
                 return NotFound();
             }
             return Ok(courseSchedule);
+        }
+
+        //[HttpPut]
+        //[Route("update/{courseScheduleId:int}")]
+        //public async Task<IActionResult> UpdateCourseSchedule([FromRoute] int courseScheduleId, [FromBody] CourseSchedule updateCourseScheduleRequest)
+        //{
+        //    var courseSchedule = await _authContext.CourseSchedules.FindAsync(courseScheduleId);
+
+        //    if (courseSchedule == null)
+        //    {
+        //        return NotFound(new { Message = "Course schedule not found" });
+        //    }
+
+        //    courseSchedule.Date = updateCourseScheduleRequest.Date;
+        //    courseSchedule.Time = updateCourseScheduleRequest.Time;
+        //    courseSchedule.Venue = updateCourseScheduleRequest.Venue;
+
+        //    await _authContext.SaveChangesAsync();
+
+        //    return Ok(new { Message = "Course schedule successfully updated" });
+        //}
+
+        [HttpDelete]
+        [Route("delete/{courseScheduleId:int}")]
+        public async Task<IActionResult> DeleteCourseSchedule([FromRoute] int courseScheduleId)
+        {
+            var course_schedule = await _authContext.CourseSchedules.FindAsync(courseScheduleId);
+            if (course_schedule == null)
+            {
+                return NotFound();
+            }
+            _authContext.CourseSchedules.Remove(course_schedule);
+            await _authContext.SaveChangesAsync();
+            return Ok(new { Message = "Successfully deleted!" });
+
         }
     }
 }

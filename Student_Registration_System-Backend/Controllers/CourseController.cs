@@ -42,6 +42,66 @@ namespace Student_Registration_System_Backend.Controllers
             return Ok(courseList);
         }
 
+        [HttpGet]
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetCourse([FromRoute] int id)
+        {
+            var course = await _authContext.Courses
+                .Include(x => x.CourseSchedules)
+                .FirstOrDefaultAsync(x => x.CourseId == id);
+
+            if (course == null)
+            {
+                return NotFound();
+            }
+            return Ok(course);
+        }
+
+        [HttpPut]
+        [Route("update/{courseId:int}")]
+        public async Task<IActionResult> UpdateCourse([FromRoute] int courseId, Course updateCourseRequest)
+        {
+            var course = await _authContext.Courses
+                .Include(c => c.CourseSchedules)
+                .FirstOrDefaultAsync(c => c.CourseId == courseId);
+
+            if (course == null)
+            {
+                return NotFound(new { Message = "Not Found" });
+            }
+
+            course.CourseName = updateCourseRequest.CourseName;
+            course.CourseCode = updateCourseRequest.CourseCode;
+            course.Credits = updateCourseRequest.Credits;
+            course.Lecturer = updateCourseRequest.Lecturer;
+
+            // Update associated course schedules
+            foreach (var updatedSchedule in updateCourseRequest.CourseSchedules)
+            {
+                var schedule = course.CourseSchedules.FirstOrDefault(s => s.CourseScheduleId == updatedSchedule.CourseScheduleId);
+
+                if (schedule != null)
+                {
+                // Update existing schedule
+                schedule.Date = updatedSchedule.Date;
+                schedule.Time = updatedSchedule.Time;
+                schedule.Venue = updatedSchedule.Venue;
+
+                await _authContext.SaveChangesAsync();
+                }
+            }
+
+            await _authContext.SaveChangesAsync();
+
+            //return Ok(new
+            //{
+            //    Message = "Successfully Updated!"
+            //});
+            return Ok(course);
+        }
+
+
+
         [HttpDelete]
         [Route("delete/{courseId:int}")]
         public async Task<IActionResult> DeleteCourse([FromRoute] int courseId)
