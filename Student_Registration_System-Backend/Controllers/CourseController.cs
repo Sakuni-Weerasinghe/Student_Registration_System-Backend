@@ -82,12 +82,11 @@ namespace Student_Registration_System_Backend.Controllers
 
                 if (schedule != null)
                 {
-                // Update existing schedule
-                schedule.Date = updatedSchedule.Date;
-                schedule.Time = updatedSchedule.Time;
-                schedule.Venue = updatedSchedule.Venue;
+                    // Update existing schedule
+                    schedule.Date = updatedSchedule.Date;
+                    schedule.Time = updatedSchedule.Time;
+                    schedule.Venue = updatedSchedule.Venue;
 
-                await _authContext.SaveChangesAsync();
                 }
             }
 

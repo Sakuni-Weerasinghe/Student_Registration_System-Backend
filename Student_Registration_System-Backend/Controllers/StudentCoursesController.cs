@@ -46,6 +46,25 @@ namespace Student_Registration_System_Backend.Controllers
             return Ok(studentCourses) ;
         }
 
+        [HttpGet]
+        [Route("{id:int}/Student")]
+        public async Task<IActionResult> GetCourseStudent([FromRoute] int id)
+        {
+            var courseStudent = await _authContext.StudentCourses
+                .Where(x => x.CourseId == id)
+                .Include(x => x.Student)
+                .ToListAsync();
+
+            if (courseStudent == null)
+            {
+                return NotFound();
+            }
+            return Ok(courseStudent);
+        }
+
+
+
+
         [HttpDelete]
         [Route("{studentId:int}/{courseId:int}")]
         public async Task<IActionResult> DeleteStudentCourse([FromRoute] int studentId,int courseId)
